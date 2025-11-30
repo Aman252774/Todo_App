@@ -1,7 +1,7 @@
 name: Deploy Todo App to EC2
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
   # push:
   #   branches: [ "main" ]
 
@@ -20,7 +20,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "./"
-        target: "/var/www/todo_app-main"
+        target: "/var/www/todo_app_main"   # <-- FIXED (underscore)
 
     - name: Run Deployment Script
       uses: appleboy/ssh-action@master
@@ -29,9 +29,17 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
+          # Nginx config copy
           sudo cp /var/www/todo_app_main/deploy/nginx.conf /etc/nginx/nginx.conf
+          
+          # Give permission to deploy script
           sudo chmod +x /var/www/todo_app_main/deploy/deploy.sh
+          
+          # Run deployment script
           sudo bash /var/www/todo_app_main/deploy/deploy.sh
+
+          # Restart nginx
+          sudo systemctl restart nginx
 
 
 
