@@ -1,29 +1,32 @@
 #!/bin/bash
 
-echo "Deployment started..."
+APP_DIR="/var/www/todo_app_main"
+BACKEND_DIR="$APP_DIR/todo-backend"
+FRONTEND_DIR="$APP_DIR/todo-frontend"
+NGINX_CONF="$APP_DIR/deploy/nginx.conf"
 
-cd /var/www/todo_app
+echo "Starting Deployment..."
 
-echo "Pulling latest code..."
-git pull origin main
-
+# ---------------- BACKEND ----------------
 echo "Installing backend dependencies..."
-cd todo-backend
+cd $BACKEND_DIR
 npm install
 
-echo "Restarting backend using PM2..."
-pm2 restart backend || pm2 start server.js --name backend
+# PM2 setup
+echo "Starting backend with PM2..."
+pm2 stop todo-app || true
+pm2 start start.js --name todo-app
+pm2 save
 
-echo "Building frontend..."
-cd ../todo-frontend
-npm install
-npm run build
+# ---------------- FRONTEND ----------------
+echo "Setting up frontend..."
+sudo rm -rf /var/www/html/*
+sudo cp -r $FRONTEND_DIR/dist/* /var/www/html/
 
-echo "Deploying frontend build..."
-rm -rf /var/www/html/*
-cp -r dist/* /var/www/html/
+# ---------------- NGINX ----------------
+echo "Updating Nginx config..."
+sudo cp $NGINX_CONF /etc/nginx/nginx.conf
 
-echo "Restarting Nginx..."
-systemctl restart nginx
+sudo systemctl restart nginx
 
-echo "Deployment Complete!"
+echo "Deployment Completed Successfully!"

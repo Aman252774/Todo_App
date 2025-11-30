@@ -2,8 +2,8 @@ name: Deploy Todo App to EC2
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
   deploy:
@@ -13,6 +13,21 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    # ---------- Build Frontend ----------
+    - name: Install Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: "18"
+
+    - name: Install frontend dependencies
+      working-directory: ./todo-frontend
+      run: npm install
+
+    - name: Build frontend
+      working-directory: ./todo-frontend
+      run: npm run build
+
+    # ---------- Upload to EC2 ----------
     - name: Upload project to EC2
       uses: appleboy/scp-action@master
       with:
@@ -20,8 +35,9 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         source: "./"
-        target: "/var/www/todo_app_main"   # <-- FIXED (underscore)
+        target: "/var/www/todo_app_main"
 
+    # ---------- Deploy on EC2 ----------
     - name: Run Deployment Script
       uses: appleboy/ssh-action@master
       with:
@@ -29,16 +45,8 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          # Nginx config copy
-          sudo cp /var/www/todo_app_main/deploy/nginx.conf /etc/nginx/nginx.conf
-          
-          # Give permission to deploy script
           sudo chmod +x /var/www/todo_app_main/deploy/deploy.sh
-          
-          # Run deployment script
           sudo bash /var/www/todo_app_main/deploy/deploy.sh
-
-          # Restart nginx
           sudo systemctl restart nginx
 
 
