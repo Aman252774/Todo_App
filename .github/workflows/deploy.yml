@@ -29,9 +29,9 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          sudo cp /var/www/todo_app-main/deploy/nginx.conf /etc/nginx/nginx.conf
-          sudo chmod +x /var/www/todo_app-main/deploy/deploy.sh
-          sudo bash /var/www/todo_app-main/deploy/deploy.sh
+          sudo cp /var/www/todo_app_main/deploy/nginx.conf /etc/nginx/nginx.conf
+          sudo chmod +x /var/www/todo_app_main/deploy/deploy.sh
+          sudo bash /var/www/todo_app_main/deploy/deploy.sh
 
 
 

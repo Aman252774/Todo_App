@@ -12,8 +12,8 @@ apt-get install -y nodejs
 npm install -g pm2
 
 # Project directory create
-mkdir -p /var/www/todo_app-main
-chown -R ubuntu:ubuntu /var/www/todo_app-main
+mkdir -p /var/www/todo_app_main
+chown -R ubuntu:ubuntu /var/www/todo_app_main
 
 systemctl enable nginx
 systemctl start nginx
