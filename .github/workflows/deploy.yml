@@ -29,8 +29,8 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          chmod +x /home/ubuntu/todo_app_main/deploy/userdata.sh
-          bash /home/ubuntu/todo_app_main/deploy/userdata.sh
+          chmod +x /home/ubuntu/todo_app_main/terraform/userdata.sh
+          bash /home/ubuntu/todo_app_main/terraform/userdata.sh
 
     - name: Run Deployment Script on EC2
       uses: appleboy/ssh-action@master
