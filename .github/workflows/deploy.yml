@@ -24,6 +24,12 @@ jobs:
 
     - name: Run Deployment Script on EC2
       uses: appleboy/ssh-action@master
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+        PORT: ${{ secrets.PORT }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_NAME: ${{ secrets.DB_NAME }}
       with:
         host: ${{ secrets.EC2_IP }}
         username: ubuntu
