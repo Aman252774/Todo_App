@@ -7,7 +7,7 @@ sudo apt install -y git curl nginx build-essential
 
 # Install Node.js 18
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs npm
+sudo apt install -y nodejs
 
 # Ensure npm path (for ubuntu user)
 export PATH=$PATH:/usr/bin:/usr/local/bin
