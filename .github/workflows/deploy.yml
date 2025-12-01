@@ -22,6 +22,16 @@ jobs:
         source: "./"
         target: "/home/ubuntu/todo_app_main"
 
+    - name: Run Userdata Script on EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          chmod +x /home/ubuntu/todo_app_main/deploy/userdata.sh
+          bash /home/ubuntu/todo_app_main/deploy/userdata.sh
+
     - name: Run Deployment Script on EC2
       uses: appleboy/ssh-action@master
       env:
